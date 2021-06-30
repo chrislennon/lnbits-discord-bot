@@ -3,6 +3,9 @@ const InteractionHandler = require(`./InteractionHandler`);
 const MessageHandler = require(`./MessageHandler`);
 const ReactionHandler = require(`./ReactionHandler`);
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 class Bot {
   /**
    * Initializes all modules, a Discord client, binds events.
@@ -94,6 +97,7 @@ class Bot {
   onReady() {
     this.InteractionHandler.updateCommands();
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
+    console.log(`Using lnbits host: ${process.env.LNBITS_HOST}`)
   }
 }
 

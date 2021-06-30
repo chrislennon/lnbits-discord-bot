@@ -13,7 +13,14 @@ In essence, allowing members of a Discord server to create wallets, deposit, tra
 
 ### Requirements
 - A functional instance of [lnbits](https://github.com/lnbits/lnbits)
-  - You can host your own, or use lnbits.com
+  - You can host your own, or use [lnbits.com](https://lnbits.com)
+    - .env entry `LNBITS_HOST`
+  - You will need to have a user 
+    - .env entry `LNBITS_ADMIN_USER_ID`
+  - You will need to have an API key for this user 
+    - .env entry `LNBITS_ADMIN_API_KEY`
+  - You will need to have the "User Manager" extension enabled
+    - //TODO This will likely be replaced with a Discord extension to handle the mapping of Discord userids to lnbits users
 - A Discord server that you administer or a willing admin from another server
 - A Discord bot user (for more detailed steps see [here](./docs/discord_bot.md)) 
   - _This provides AUTH_TOKEN_
