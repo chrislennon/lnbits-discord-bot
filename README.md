@@ -26,13 +26,17 @@ In essence, allowing members of a Discord server to create wallets, deposit, tra
     - //TODO This will likely be replaced with a Discord extension to handle the mapping of Discord userids to lnbits users
 - A Discord server that you administer or a willing admin from another server
 - A Discord bot user (for more detailed steps see [here](./docs/discord_bot.md)) 
-  - _This provides AUTH_TOKEN_
+  - _This provides `AUTH_TOKEN`_
 - Environment for the bot to run
   - [NodeJs](https://nodejs.org/en/download/current/) > v14
 
 ### Starting your bot
-- Copy the file `.env.example` to `.env` and enter your `AUTH_TOKEN`
-- Run the command `npm start`
+- Copy the file `.env.example` to `.env` and fill out the variables
+  - You will need to create one user on your lnbits instance to start
+- If you have never run the project run `npm install`
+- Start the bot with the `npm start` command
+  - The bot should report that is connected in the terminal
+  - Your bot should be online in Discord 🎉
 
 ---
 ---
