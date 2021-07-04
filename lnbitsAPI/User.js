@@ -25,6 +25,7 @@ class UserWallet extends Api {
       "memo": description
     })
     .post()
+    .json()
   }
 
   payInvoice(bolt11) {
