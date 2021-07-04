@@ -1,5 +1,13 @@
 const Command = require(`./Command.js`);
-const userManager = require(`../lnbitsAPI/UserManager.js`);
+const UserManager = require(`../lnbitsAPI/UserManager.js`);
+
+/*
+This command will create a wallet link for a mentioned user or return an existing wallet if already created
+
+TODO:
+- This command should only allow for users to create a wallet for themselves, or at least not exposese the user link to others
+- Mainly this is here for testing of UserManager().createUserWalletIfNotExist()
+*/
 
 class Create extends Command {
   constructor() {
@@ -15,10 +23,9 @@ class Create extends Command {
   }
 
   async execute(Interaction) {
-
     const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
     const member = await Interaction.guild.members.fetch(target.id);
-    const um = new userManager();
+    const um = new UserManager();
     const userWallet = await um.createUserWalletIfNotExist(target.username.toString(), member.toString());
 
     Interaction.reply(`You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.id}`, {"ephemeral": true})

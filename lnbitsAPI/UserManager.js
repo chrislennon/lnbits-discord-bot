@@ -7,22 +7,27 @@ class UserManager extends Api {
     this.headers = { 'X-Api-Key': `${process.env.LNBITS_ADMIN_API_KEY}` }
   }
 
-  async createUserWalletIfNotExist(username, userId) {
-    const json = await this.getUsers().json(json => {
-      console.log('response', json);
+  async createUserWalletIfNotExist(username, discordId) {
+    const userObj = await this.getLnbitsUser(discordId)
+    if (userObj.id) return userObj
+    else this.createUserWallet(username, discordId).json()
+  }
+
+  async getLnbitsUser(discordId) {
+    const userObj = await this.getUsers().json(json => {
       const result = json.filter(obj => {
-        return obj.email === userId
+        return obj.email === discordId
       })
-      if (result.length > 0) {
-        // return existing user object
-        return result[0]
-      }
-      else {
-        // return new user object
-        return this.createUserWallet(username, userId).json();
-      }
+      if (result.length > 0) return result[0]
+      else return {}
     })
-    return json
+    return userObj
+  }
+
+  async getUserWallet(discordId) {
+    const userObj = await this.getLnbitsUser(discordId);
+    const userWallet = await this.getWallets(userObj.id);
+    return userWallet[0]
   }
 
   getUsers() {
@@ -40,10 +45,10 @@ class UserManager extends Api {
   }
 
   getWallets(userId) {
-    this.externalApi
+    return this.externalApi
     .url(`${this.urlPath}/wallets/${userId}`)
     .headers(this.headers)
-    .get()
+    .get().json()
   }
 
   getTransactions(walletId) {
