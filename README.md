@@ -1,6 +1,6 @@
 # Discord bot for lnbits
 
-### _This respository is currently non functional and a work in progress_
+### _This respository is currently a work in progress_
 
 If you wish to discuss any development of this feel free to open an issue or chat on our [telegram group](https://t.me/joinchat/dh4xD_LwlAphOWNk).
 Be sure to also check out [lnbits](https://github.com/lnbits/lnbits) for any updates too!
@@ -40,15 +40,31 @@ In essence, allowing members of a Discord server to create wallets, deposit, tra
 
 ---
 ---
-## Current Direction
+## Current Operations
+
+```
+Most commands are currently very permissive, allowing users to access the wallets of other users. USE WITH CAUTION.
+```
+
+- [x] Create a wallet for self and other users
+- [x] Create only one user account per Discord user
+- [x] Create only one wallet per Discord user
+- [x] Retrieve wallet balance of Discord user
+- [ ] Create an invoice
+- [ ] Pay an invoice
+- [ ] Display payment link/reference
+- [ ] Embed QR of invoice request
+- [ ] Enable tipping between users
+- [ ] Enable betting on events
+- [ ] Lots more...
+ 
+
+## Notes
 * This will only utilize testnet until an arbitrary comfort point is reached with the related projects, including this one.
 * This project will utilise [lnbits](https://github.com/lnbits/lnbits) as a simple (and open source) lightning network account management system
 * This project will seek to use Discord [slash commands](https://discord.com/developers/docs/interactions/slash-commands) as a more userfriendly interaction point. For example:
   - `/tip @user 100` will send 100 satoshis from the initiating user to the targetted user
   - `/withdraw` will send a direct message to the user with instructions on how issue an invoice to the bot which it will pay
-
-
-## Notes
 * Discord slash commands seem to be fairly early as such there is limited library support. [Discord.js](https://discord.js.org/#/) has this feature in early development.
   - As lnbits is python based and this bot is javascript based, initially interaction will happen over lnbits API on http.
   - Ideally at a future point this bot will operate fully as part of an lnbits extension, currently these will be two independant process.
