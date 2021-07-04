@@ -49,15 +49,21 @@ class PayMe extends Command {
     const invoiceDetails = await uw.createInvote(amount.value, description.value);
  
     const qrData = await QRCode.toDataURL(invoiceDetails.payment_request);
-    const buf = new Buffer.from(qrData.split(',')[1], 'base64');
-    const file = new Discord.MessageAttachment(buf, 'img.jpeg');
-    
-    const embed = new Discord.MessageEmbed()
-        .attachFiles(file)
-        .setImage(`attachment://img.jpeg`)
-        .addField(`Payment Request`, `${invoiceDetails.payment_request}`, true)
+    const buffer = new Buffer.from(qrData.split(',')[1], 'base64');
+    const file = new Discord.MessageAttachment(buffer, 'image.png');
+    const embed = new Discord.MessageEmbed().setImage('attachment://image.png').addField(`Payment Request`, `${invoiceDetails.payment_request}`, true);
 
-    Interaction.editReply(embed);
+    const row = new Discord.MessageActionRow()
+    .addComponents([
+        new Discord.MessageButton({
+            custom_id: 'pay',
+            label: 'Pay Now!',
+            emoji: { name: '💸' },
+            style: 'SECONDARY'
+        })
+    ]);
+          
+    Interaction.editReply({ embeds: [embed], files: [file], components: [row]});
   }
 }
 
