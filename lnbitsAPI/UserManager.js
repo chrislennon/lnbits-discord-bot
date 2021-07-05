@@ -9,7 +9,7 @@ class UserManager extends Api {
 
   async createUserWalletIfNotExist(username, discordId) {
     const userObj = await this.getLnbitsUser(discordId)
-    if (userObj.id) return userObj
+    if (userObj.length > 0) return userObj[0]
     else {
       const walletId = this.createUserWallet(username, discordId).json();
       return walletId
@@ -21,8 +21,7 @@ class UserManager extends Api {
       const result = json.filter(obj => {
         return obj.email === discordId
       })
-      if (result.length > 0) return result[0]
-      else return {}
+      return result[0]
     })
     return userObj
   }

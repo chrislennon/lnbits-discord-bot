@@ -23,10 +23,10 @@ class Create extends Command {
   }
 
   async execute(Interaction) {
-    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
-    const member = await Interaction.guild.members.fetch(target.id);
+    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`) : Interaction;
+    const member = await Interaction.guild.members.fetch(target.user.id);
     const um = new UserManager();
-    const userWallet = await um.createUserWalletIfNotExist(target.username.toString(), member.toString());
+    const userWallet = await um.createUserWalletIfNotExist(member.user.username, target.user.id);
 
     Interaction.reply(`You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.id}`, {"ephemeral": true})
   }

@@ -37,13 +37,13 @@ class PayMe extends Command {
 
   async execute(Interaction) {
     await Interaction.defer();
-    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
+    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`) : Interaction;
     const amount = Interaction.options.get(`amount`);
     const description = Interaction.options.get(`description`);
-    const member = await Interaction.guild.members.fetch(target.id);
+    const member = await Interaction.guild.members.fetch(target.user.id);
     
     const um = new UserManager();
-    const userWallet = await um.getUserWallet(member.toString());
+    const userWallet = await um.getUserWallet(member.user.id);
     
     const uw = new UserWallet(userWallet.adminkey);
     const invoiceDetails = await uw.createInvote(amount.value, description.value);

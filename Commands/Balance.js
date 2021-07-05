@@ -23,16 +23,16 @@ class Balance extends Command {
   }
 
   async execute(Interaction) {
-    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`).user : Interaction.user;
-    const member = await Interaction.guild.members.fetch(target.id);
+    const target = Interaction.options.get(`user`) ? Interaction.options.get(`user`) : Interaction;
+    const member = await Interaction.guild.members.fetch(target.user.id);
     
     const um = new UserManager();
-    const userWallet = await um.getUserWallet(member.toString());
+    const userWallet = await um.getUserWallet(target.user.id);
     
     const uw = new UserWallet(userWallet.adminkey);
     const userWalletDetails = await uw.getWalletDetails();
     
-    Interaction.reply(`The wallet for ${target.username.toString()} has ${userWalletDetails.balance} sats`, {"ephemeral": true})
+    Interaction.reply(`The wallet for ${member.username} has ${userWalletDetails.balance} sats`, {"ephemeral": true})
   }
 }
 

@@ -37,6 +37,7 @@ class UserWallet extends Api {
       "bolt11": bolt11
     })
     .post()
+    .json()
   }
 
   checkInvoice(paymentHash) {
