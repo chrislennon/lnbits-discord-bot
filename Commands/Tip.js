@@ -27,26 +27,40 @@ class Tip extends Command {
 
   async execute(Interaction) {
     await Interaction.defer();
-    const sender = Interaction.user;
-    const receiver = Interaction.options.get(`user`).user;
+    const sender = Interaction;
+    const receiver = Interaction.options.get(`user`);
     const amount = Interaction.options.get(`amount`);
     const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : `null`;
 
-    const senderData = await Interaction.guild.members.fetch(sender.id);
-    const receiverData = await Interaction.guild.members.fetch(receiver.id);
+    const senderData = await Interaction.guild.members.fetch(sender.user.id);
+    const receiverData = await Interaction.guild.members.fetch(receiver.user.id);
     
     const _ = new UserManager();
-    const senderWalletData = await _.getUserWallet(sender.id);
-    const receiverWalletData = await _.getUserWallet(receiver.id);
+    const senderWalletData = await _.getUserWallet(sender.user.id);
+    const receiverWalletData = await _.getUserWallet(receiver.user.id);
 
-    const senderWallet = new UserWallet(senderWalletData.adminkey);
-    const receiverWallet = new UserWallet(receiverWalletData.adminkey);
+    if (receiverWalletData.id) {
 
-    const invoiceDetails = await receiverWallet.createInvote(amount.value, message);   
-    const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
-    console.log(`invoice details`,invoicePaymentDetails);
+      const senderWallet = new UserWallet(senderWalletData.adminkey);
+      const receiverWallet = new UserWallet(receiverWalletData.adminkey);
+      
+      const invoiceDetails = await receiverWallet.createInvote(amount.value, message);   
+      const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
+      console.log(`invoice details`,invoicePaymentDetails);
 
-    Interaction.editReply(`${senderData.user.username} transferred ${amount.value} sats to ${receiverData.user.username}`);
+      const sats = amount.value;
+      const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+      
+      Interaction.editReply({
+        content:`${senderData.toString()} sent ${sats} Satoshis / ฿${btc} to ${receiverData.toString()}`,
+      });
+    }
+    else {
+      // TODO decide how/when best to create a wallet for a user when not user initiated
+      Interaction.editReply({
+        content:`${receiverData.toString()} has currently not set up a wallet.`,
+      });
+    }
   }
 }
 
