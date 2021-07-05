@@ -51,10 +51,11 @@ Most commands are currently very permissive, allowing users to access the wallet
 - [x] Create only one wallet per Discord user
 - [x] Retrieve wallet balance of Discord user
 - [x] Create an invoice
-- [ ] Pay an invoice
+- [X] Pay an invoice
 - [x] Display payment link/reference
 - [x] Embed QR of invoice request
-- [ ] Enable tipping between users
+- [X] Enable tipping between users
+- [ ] Implement Paynow interaton handler
 - [ ] Enable betting on events
 - [ ] Lots more...
  
