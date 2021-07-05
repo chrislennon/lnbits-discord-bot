@@ -57,8 +57,12 @@ class Tip extends Command {
     }
     else {
       // TODO decide how/when best to create a wallet for a user when not user initiated
+      const um = new UserManager();
+      const userWallet = await um.createUserWalletIfNotExist(receiverData.user.username, receiver.user.id);
+
+      console.log(userWallet);
       Interaction.editReply({
-        content:`${receiverData.toString()} has currently not set up a wallet.`,
+        content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
       });
     }
   }
