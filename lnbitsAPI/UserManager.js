@@ -9,7 +9,7 @@ class UserManager extends Api {
 
   async createUserWalletIfNotExist(username, discordId) {
     const userObj = await this.getLnbitsUser(discordId);
-    if (userObj.length > 0) return userObj[0];
+    if (userObj) return userObj;
     else {
       const walletId = this.createUserWallet(username, discordId).json();
       return walletId;
@@ -21,15 +21,28 @@ class UserManager extends Api {
       const result = json.filter(obj => {
         return obj.email === discordId;
       });
+
       return result[0];
     });
+
     return userObj;
   }
 
   async getUserWallet(discordId) {
     const userObj = await this.getLnbitsUser(discordId);
-    const userWallet = await this.getWallets(userObj.id);
-    return userWallet[0];
+    let response = {
+      id: false
+    };
+    if (userObj) {
+      let userWallet = await this.getWallets(userObj.id);
+      response = userWallet[0];
+    }
+    else {
+      // TODO decide how/when best to create a wallet for a user when not user initiated
+      console.log(`User ${discordId} does not have a wallet`);
+    }
+    
+    return response;
   }
 
   getUsers() {
