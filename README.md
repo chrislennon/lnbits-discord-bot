@@ -1,6 +1,6 @@
 # Discord bot for lnbits
 
-### _This respository is currently non functional and a work in progress_
+### _This respository is currently a work in progress_
 
 If you wish to discuss any development of this feel free to open an issue or chat on our [telegram group](https://t.me/joinchat/dh4xD_LwlAphOWNk).
 Be sure to also check out [lnbits](https://github.com/lnbits/lnbits) for any updates too!
