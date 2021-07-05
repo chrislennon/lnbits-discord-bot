@@ -31,12 +31,16 @@ In essence, allowing members of a Discord server to create wallets, deposit, tra
 - `/create`
   - Will create yourself a wallet and send you the link
   - In testing you can target another user `/create @user`
+
 - `/balance` 
   - Will show you the balance of your wallets
   - In testing you can target another user `/balance @user`
+
 - `/payme [amount] [description]`
   - Will create a payable invoice link and show it in chat
   - In testing you can target another user `/payme [amount] [description] @user`
+  - <img width="614" alt="Screenshot 2021-07-05 at 04 01 16" src="https://user-images.githubusercontent.com/9197696/124408073-bdb26880-dd45-11eb-8972-cbc9007e5cf6.png">
+
 - `/tip @user [amount] [message]`
   - Will tip a user by sending atuomatically paying an invoice
   - message is optional
