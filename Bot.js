@@ -27,8 +27,8 @@ class Bot {
    */
   bindEvents() {
     this.client.on(`ready`, this.onReady.bind(this));
-    this.client.on(`interaction`, this.onInteraction.bind(this));
-    this.client.on(`message`, this.onMessage.bind(this));
+    this.client.on(`interactionCreate`, this.onInteraction.bind(this));
+    this.client.on(`messageCreate`, this.onMessage.bind(this));
     this.client.on(`messageReactionAdd`, this.onMessageReactionAdd.bind(this));
     this.client.on(`messageReactionRemove`, this.onMessageReactionRemove.bind(this));
   }
