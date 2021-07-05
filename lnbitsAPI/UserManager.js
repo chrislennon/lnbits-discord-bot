@@ -3,7 +3,7 @@ const Api = require(`./LnbitsApi.js`);
 class UserManager extends Api {
   constructor() {
     super();
-    this.urlPath = `/usermanager/api/v1`;
+    this.urlPath = `/discordbot/api/v1`;
     this.headers = { 'X-Api-Key': `${process.env.LNBITS_ADMIN_API_KEY}` };
   }
 
@@ -20,7 +20,7 @@ class UserManager extends Api {
   async getLnbitsUser(discordId) {
     const userObj = await this.getUsers().json(json => {
       const result = json.filter(obj => {
-        return obj.email === discordId;
+        return obj.discord_id === discordId;
       });
 
       return result[0];
@@ -79,7 +79,7 @@ class UserManager extends Api {
         "admin_id": `${process.env.LNBITS_ADMIN_USER_ID}`,
         "user_name": `${username}`,
         "wallet_name": `${username}-main`,
-        "email": `${userId}`
+        "discord_id": `${userId}`
       })
       .post();
   }
