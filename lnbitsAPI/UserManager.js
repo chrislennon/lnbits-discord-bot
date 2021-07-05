@@ -7,12 +7,13 @@ class UserManager extends Api {
     this.headers = { 'X-Api-Key': `${process.env.LNBITS_ADMIN_API_KEY}` };
   }
 
-  async createUserWalletIfNotExist(username, discordId) {
-    const userObj = await this.getLnbitsUser(discordId);
-    if (userObj) return userObj;
+  async getOrCreateWallet(username, discordId) {
+    const walletData = await this.getUserWallet(discordId);
+    if (walletData.id) return walletData;
     else {
-      const walletId = this.createUserWallet(username, discordId).json();
-      return walletId;
+      await this.createUserWallet(username, discordId).json();
+      const createdWalletData = await this.getUserWallet(discordId);
+      return createdWalletData;
     }
   }
 
@@ -24,7 +25,6 @@ class UserManager extends Api {
 
       return result[0];
     });
-
     return userObj;
   }
 
@@ -38,10 +38,8 @@ class UserManager extends Api {
       response = userWallet[0];
     }
     else {
-      // TODO decide how/when best to create a wallet for a user when not user initiated
       console.log(`User ${discordId} does not have a wallet`);
     }
-    
     return response;
   }
 

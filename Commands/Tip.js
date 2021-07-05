@@ -32,14 +32,22 @@ class Tip extends Command {
     const amount = Interaction.options.get(`amount`);
     const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : `null`;
 
+    const sats = amount.value;
+    const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+    const valueString =  `${sats} Satoshis / ฿${btc}`;
+
     const senderData = await Interaction.guild.members.fetch(sender.user.id);
     const receiverData = await Interaction.guild.members.fetch(receiver.user.id);
-    
+
     const _ = new UserManager();
     const senderWalletData = await _.getUserWallet(sender.user.id);
-    const receiverWalletData = await _.getUserWallet(receiver.user.id);
+    const receiverWalletData = await _.getOrCreateWallet(receiverData.user.username, receiver.user.id);
 
-    if (receiverWalletData.id) {
+    if (!senderWalletData.id) {
+      Interaction.editReply({
+        content:`You do not currently have a wallet you can use /create`,
+      });
+    } else if (receiverWalletData.id) {
 
       const senderWallet = new UserWallet(senderWalletData.adminkey);
       const receiverWallet = new UserWallet(receiverWalletData.adminkey);
@@ -47,18 +55,15 @@ class Tip extends Command {
       const invoiceDetails = await receiverWallet.createInvote(amount.value, message);   
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
       console.log(`invoice details`,invoicePaymentDetails);
-
-      const sats = amount.value;
-      const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
       
+      receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}wallet?usr=${receiverWalletData.user}`);
       Interaction.editReply({
-        content:`${senderData.toString()} sent ${sats} Satoshis / ฿${btc} to ${receiverData.toString()}`,
+        content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
       });
     }
     else {
-      // TODO decide how/when best to create a wallet for a user when not user initiated
       Interaction.editReply({
-        content:`${receiverData.toString()} has currently not set up a wallet.`,
+        content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
       });
     }
   }
