@@ -1,7 +1,7 @@
-const wretch = require('wretch');
+const wretch = require(`wretch`);
 
 wretch().polyfills({
-  fetch: require("node-fetch"),
+  fetch: require(`node-fetch`),
 });
 
 class LnbitsApi {
@@ -11,9 +11,9 @@ class LnbitsApi {
     this.options = [];
     this.externalApi = wretch()
     // Set the base url
-    .url(`${process.env.LNBITS_HOST}`)
+      .url(`${process.env.LNBITS_HOST}`)
     // Handle 403 errors
-    .resolve(_ => _.forbidden(console.log));
+      .resolve(_ => _.forbidden(console.log));
   }
 
   execute() {

@@ -32,7 +32,7 @@ class Balance extends Command {
     const uw = new UserWallet(userWallet.adminkey);
     const userWalletDetails = await uw.getWalletDetails();
     
-    Interaction.reply(`The wallet for ${member.username} has ${userWalletDetails.balance} sats`, {"ephemeral": true})
+    Interaction.reply(`The wallet for ${member.user.username} has ${(userWalletDetails.balance/1000)} sats`, {"ephemeral": true});
   }
 }
 

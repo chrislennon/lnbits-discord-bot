@@ -30,7 +30,7 @@ class Tip extends Command {
     const sender = Interaction.user;
     const receiver = Interaction.options.get(`user`).user;
     const amount = Interaction.options.get(`amount`);
-    const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : 'null';
+    const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : `null`;
 
     const senderData = await Interaction.guild.members.fetch(sender.id);
     const receiverData = await Interaction.guild.members.fetch(receiver.id);
@@ -44,6 +44,7 @@ class Tip extends Command {
 
     const invoiceDetails = await receiverWallet.createInvote(amount.value, message);   
     const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
+    console.log(`invoice details`,invoicePaymentDetails);
 
     Interaction.editReply(`${senderData.user.username} transferred ${amount.value} sats to ${receiverData.user.username}`);
   }

@@ -3,7 +3,7 @@ const InteractionHandler = require(`./InteractionHandler`);
 const MessageHandler = require(`./MessageHandler`);
 const ReactionHandler = require(`./ReactionHandler`);
 
-const dotenv = require('dotenv');
+const dotenv = require(`dotenv`);
 dotenv.config();
 
 class Bot {
@@ -52,7 +52,7 @@ class Bot {
    * Passes interaction events to the InteractionHandler.
    * @param {Interaction} Interaction The Discord interaction object.
    */
-   onInteraction(Interaction) {
+  onInteraction(Interaction) {
     this.InteractionHandler.handleInteraction(Interaction);
   }
 
@@ -63,12 +63,12 @@ class Bot {
    */
   onMessage(Message) {
     if (
-      Message.content.toLowerCase() === '!deploy' && 
+      Message.content.toLowerCase() === `!deploy` && 
       Message.author.id === `177898294939222016`
-      ) {
-        this.InteractionHandler.createCommands();
-        return;
-      }
+    ) {
+      this.InteractionHandler.createCommands();
+      return;
+    }
 
     this.MessageHandler.handleMessage(Message);
   }
@@ -97,7 +97,7 @@ class Bot {
   onReady() {
     this.InteractionHandler.updateCommands();
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
-    console.log(`Using lnbits host: ${process.env.LNBITS_HOST}`)
+    console.log(`Using lnbits host: ${process.env.LNBITS_HOST}`);
   }
 }
 

@@ -2,7 +2,7 @@ const Discord = require(`discord.js`);
 const Command = require(`./Command.js`);
 const UserManager = require(`../lnbitsAPI/UserManager.js`);
 const UserWallet = require(`../lnbitsAPI/User.js`);
-const QRCode = require('qrcode');
+const QRCode = require(`qrcode`);
 
 /*
 This command will create an invoice for a user. 
@@ -49,19 +49,19 @@ class PayMe extends Command {
     const invoiceDetails = await uw.createInvote(amount.value, description.value);
  
     const qrData = await QRCode.toDataURL(invoiceDetails.payment_request);
-    const buffer = new Buffer.from(qrData.split(',')[1], 'base64');
-    const file = new Discord.MessageAttachment(buffer, 'image.png');
-    const embed = new Discord.MessageEmbed().setImage('attachment://image.png').addField(`Payment Request`, `${invoiceDetails.payment_request}`, true);
+    const buffer = new Buffer.from(qrData.split(`,`)[1], `base64`);
+    const file = new Discord.MessageAttachment(buffer, `image.png`);
+    const embed = new Discord.MessageEmbed().setImage(`attachment://image.png`).addField(`Payment Request`, `${invoiceDetails.payment_request}`, true);
 
     const row = new Discord.MessageActionRow()
-    .addComponents([
+      .addComponents([
         new Discord.MessageButton({
-            custom_id: 'pay',
-            label: 'Pay Now!',
-            emoji: { name: '💸' },
-            style: 'SECONDARY'
+          custom_id: `pay`,
+          label: `Pay Now!`,
+          emoji: { name: `💸` },
+          style: `SECONDARY`
         })
-    ]);
+      ]);
           
     Interaction.editReply({ embeds: [embed], files: [file], components: [row]});
   }

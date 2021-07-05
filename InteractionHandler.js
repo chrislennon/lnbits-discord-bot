@@ -9,7 +9,7 @@ class InteractionHandler {
 
     fs.readdirSync(`./Commands`)
       .filter(file => file.endsWith(`.js`))
-      .filter(file => file !== 'Command.js')
+      .filter(file => file !== `Command.js`)
       .map(file => require(`./Commands/${file}`))
       .filter(cmd => cmd.name)
       .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
@@ -18,7 +18,7 @@ class InteractionHandler {
   /**
    * Create slash commands
    */
-   async createCommands() {
+  async createCommands() {
     // TODO: Loop over guilds?
     const data = [];
 

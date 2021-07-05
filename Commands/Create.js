@@ -28,7 +28,7 @@ class Create extends Command {
     const um = new UserManager();
     const userWallet = await um.createUserWalletIfNotExist(member.user.username, target.user.id);
 
-    Interaction.reply(`You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.id}`, {"ephemeral": true})
+    Interaction.reply(`You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.id}`, {"ephemeral": true});
   }
 }
 
