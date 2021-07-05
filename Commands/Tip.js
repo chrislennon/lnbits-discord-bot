@@ -41,9 +41,13 @@ class Tip extends Command {
 
     const _ = new UserManager();
     const senderWalletData = await _.getUserWallet(sender.user.id);
-    const receiverWalletData = await _.getUserWallet(receiver.user.id);
+    const receiverWalletData = await _.getOrCreateWallet(receiverData.user.username, receiver.user.id);
 
-    if (receiverWalletData.id) {
+    if (!senderWalletData.id) {
+      Interaction.editReply({
+        content:`You do not currently have a wallet you can use /create`,
+      });
+    } else if (receiverWalletData.id) {
 
       const senderWallet = new UserWallet(senderWalletData.adminkey);
       const receiverWallet = new UserWallet(receiverWalletData.adminkey);
@@ -58,11 +62,6 @@ class Tip extends Command {
       });
     }
     else {
-      // TODO decide how/when best to create a wallet for a user when not user initiated
-      const um = new UserManager();
-      const userWallet = await um.createUserWalletIfNotExist(receiverData.user.username, receiver.user.id);
-
-      receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} tried to send you ${valueString}. 🚨But you didnt have a wallet!🚨\nI have set one up for you, it can be accessed at ${process.env.LNBITS_HOST}wallet?usr=${userWallet.user}`);
       Interaction.editReply({
         content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
       });
