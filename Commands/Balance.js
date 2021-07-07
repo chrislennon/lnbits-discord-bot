@@ -15,7 +15,7 @@ class Balance extends Command {
   }
 
   async execute(Interaction) {
-    await Interaction.defer();
+    await Interaction.defer({ephemeral: true});
     const um = new UserManager();
     const userWallet = await um.getUserWallet(Interaction.user.id);
 
