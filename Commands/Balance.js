@@ -15,6 +15,7 @@ class Balance extends Command {
   }
 
   async execute(Interaction) {
+    await Interaction.defer();
     const um = new UserManager();
     const userWallet = await um.getUserWallet(Interaction.user.id);
 
@@ -27,13 +28,13 @@ class Balance extends Command {
       const sats = userWalletDetails.balance/1000;
       const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
       
-      Interaction.reply({
+      Interaction.editReply({
         content:`Balance: ${sats} Satoshis / ฿${btc} \nAccess wallet here: ${walletUrl}`,
         ephemeral: true,
       });
     }
     else {
-      Interaction.reply({
+      Interaction.editReply({
         content:`You do not currently have a wallet you can use /create`,
         ephemeral: true,
       });
