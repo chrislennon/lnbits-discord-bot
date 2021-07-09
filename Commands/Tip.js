@@ -47,6 +47,10 @@ class Tip extends Command {
       Interaction.editReply({
         content:`You do not currently have a wallet you can use /create`,
       });
+    } else if ((senderWalletData.balance/1000) - sats < 0) {
+      Interaction.editReply({
+        content:`You do not have the balance to do this.`,
+      });
     } else if (receiverWalletData.id) {
 
       const senderWallet = new UserWallet(senderWalletData.adminkey);
@@ -56,7 +60,12 @@ class Tip extends Command {
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
       console.log(`invoice details`,invoicePaymentDetails);
       
-      receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}wallet?usr=${receiverWalletData.user}`);
+      try {
+        receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${receiverWalletData.user}`);
+      } catch {
+        console.log(`User was a bot or is blocking direct messages`);
+      }
+      
       Interaction.editReply({
         content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
       });
