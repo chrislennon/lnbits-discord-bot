@@ -60,17 +60,18 @@ class Tip extends Command {
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
       console.log(`invoice details`,invoicePaymentDetails);
       
-      try {
-        receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${receiverWalletData.user}`);
-      } catch {
-        console.log(`User was a bot or is blocking direct messages`);
-      }
-      
-      Interaction.editReply({
+      await Interaction.editReply({
         content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
       });
+      try {
+        await receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${receiverWalletData.user}`);
+      } catch (err) {
+        console.log(err.status);
+        console.log(`User was a bot or is blocking direct messages`);
+      }
     }
     else {
+      // This message should no longer fire as wallets are created as required
       Interaction.editReply({
         content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
       });
