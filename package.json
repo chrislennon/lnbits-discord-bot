@@ -24,9 +24,11 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "startd": "nodemon index.js"
   },
   "devDependencies": {
-    "eslint": "^7.30.0"
+    "eslint": "^7.30.0",
+    "nodemon": "^2.0.11"
   }
 }
