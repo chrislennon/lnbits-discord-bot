@@ -23,7 +23,7 @@ class Balance extends Command {
       const uw = new UserWallet(userWallet.adminkey);
       const userWalletDetails = await uw.getWalletDetails();
       
-      const walletUrl = `${process.env.LNBITS_HOST}wallet?usr=${userWallet.user}`;
+      const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
 
       const sats = userWalletDetails.balance/1000;
       const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
