@@ -15,6 +15,7 @@
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
+    "winston": "^3.3.3",
     "wretch": "^1.7.5"
   },
   "engines": {
