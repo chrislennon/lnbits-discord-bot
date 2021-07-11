@@ -17,27 +17,36 @@ class Balance extends Command {
   async execute(Interaction) {
     await Interaction.defer({ephemeral: true});
     const um = new UserManager();
-    const userWallet = await um.getUserWallet(Interaction.user.id);
+    try {
+      const userWallet = await um.getUserWallet(Interaction.user.id);
 
-    if (userWallet.adminkey) {
-      const uw = new UserWallet(userWallet.adminkey);
-      const userWalletDetails = await uw.getWalletDetails();
-      
-      const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
-
-      const sats = userWalletDetails.balance/1000;
-      const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
-      
-      Interaction.editReply({
-        content:`Balance: ${sats} Satoshis / ฿${btc} \nAccess wallet here: ${walletUrl}`,
-        ephemeral: true,
-      });
-    }
-    else {
-      Interaction.editReply({
-        content:`You do not currently have a wallet you can use /create`,
-        ephemeral: true,
-      });
+      if (userWallet.adminkey) {
+        const uw = new UserWallet(userWallet.adminkey);
+        try {
+          const userWalletDetails = await uw.getWalletDetails();
+        
+          const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
+    
+          const sats = userWalletDetails.balance/1000;
+          const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+          
+          Interaction.editReply({
+            content:`Balance: ${sats} Satoshis / ฿${btc} \nAccess wallet here: ${walletUrl}`,
+            ephemeral: true,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+      else {
+        Interaction.editReply({
+          content:`You do not currently have a wallet you can use /create`,
+          ephemeral: true,
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }

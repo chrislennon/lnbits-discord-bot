@@ -14,14 +14,24 @@ class Create extends Command {
   }
 
   async execute(Interaction) {
-    const member = await Interaction.guild.members.fetch(Interaction.user.id);
-    const um = new UserManager();
-    const userWallet = await um.getOrCreateWallet(member.user.username, Interaction.user.id);
+    let member;
+    try {
+      member = await Interaction.guild.members.fetch(Interaction.user.id);
+    } catch (err) {
+      console.log(err);
+    }
+    
+    try {
+      const um = new UserManager();
+      const userWallet = await um.getOrCreateWallet(member.user.username, Interaction.user.id);
 
-    Interaction.reply({
-      content: `You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`,
-      ephemeral: true
-    });
+      Interaction.reply({
+        content: `You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`,
+        ephemeral: true
+      });
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 
