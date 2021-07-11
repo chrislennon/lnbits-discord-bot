@@ -46,7 +46,6 @@ class InteractionHandler {
    * Update slash commands
    */
   async updateCommands() {
-    // TODO: Loop over guilds?
     const data = [];
 
     this.commands.forEach(async cmd => {
@@ -57,15 +56,7 @@ class InteractionHandler {
       });
     });
 
-    this.buttons.forEach(async cmd => {
-      data.push({
-        name: cmd.name,
-        description: cmd.description,
-        options: cmd.options
-      });
-    });
-
-    //console.log('Update - guilds', await this.client.guilds.cache);
+    // Loop over guilds?
     this.client.guilds.cache.forEach(async guild => {
       await guild.commands.set(data);
     }); 
