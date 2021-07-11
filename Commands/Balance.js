@@ -1,3 +1,4 @@
+const Discord = require(`discord.js`);
 const Command = require(`./Command.js`);
 const UserManager = require(`../lnbitsAPI/UserManager.js`);
 const UserWallet = require(`../lnbitsAPI/User.js`);
@@ -29,10 +30,22 @@ class Balance extends Command {
     
           const sats = userWalletDetails.balance/1000;
           const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
-          
+
+          const row = new Discord.MessageActionRow()
+          .addComponents([
+            new Discord.MessageButton({
+              label: `Go to my wallet`,
+              emoji: { name: `💰` },
+              style: `LINK`,
+              url: `${walletUrl}`,
+            })
+          ]);
+      
+
           Interaction.editReply({
-            content:`Balance: ${sats} Satoshis / ฿${btc} \nAccess wallet here: ${walletUrl}`,
+            content:`Balance: ${sats} Satoshis / ฿${btc}`,
             ephemeral: true,
+            components: [row]
           });
         } catch (err) {
           console.log(err);
