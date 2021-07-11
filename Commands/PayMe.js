@@ -6,10 +6,7 @@ const QRCode = require(`qrcode`);
 
 /*
 This command will create an invoice for a user. 
-Provides an embed for 
-
-TODO:
-- Currently you can specify an optional user to create an invoice under
+Provides an embed for QR scanning
 */
 
 class PayMe extends Command {
@@ -27,42 +24,56 @@ class PayMe extends Command {
       type: `STRING`,
       description: `The description of the invoice`,
       required: true,
-    },{
-      name: `user`,
-      type: `USER`,
-      description: `The user to show wallet balance of`,
-      required: false,
     }];
   }
 
   async execute(Interaction) {
-    await Interaction.defer();
+
     const amount = Interaction.options.get(`amount`);
     const description = Interaction.options.get(`description`);
-    const member = await Interaction.guild.members.fetch(Interaction.user.id);
-    
-    const um = new UserManager();
-    const userWallet = await um.getUserWallet(member.user.id);
-    
-    const uw = new UserWallet(userWallet.adminkey);
-    const invoiceDetails = await uw.createInvote(amount.value, description.value);
- 
-    const qrData = await QRCode.toDataURL(invoiceDetails.payment_request);
-    const buffer = new Buffer.from(qrData.split(`,`)[1], `base64`);
-    const file = new Discord.MessageAttachment(buffer, `image.png`);
-    const embed = new Discord.MessageEmbed().setImage(`attachment://image.png`).addField(`Payment Request`, `${invoiceDetails.payment_request}`, true);
+    let member;
 
-    const row = new Discord.MessageActionRow()
-      .addComponents([
-        new Discord.MessageButton({
-          custom_id: `pay`,
-          label: `Pay Now!`,
-          emoji: { name: `💸` },
-          style: `SECONDARY`
-        })
-      ]);
-          
-    Interaction.editReply({ embeds: [embed], files: [file], components: [row]});
+    if (amount.value <= 0) {
+      Interaction.reply({
+        content: `Negative balances are not permitted`,
+        ephemeral: true
+      });
+      return
+    }
+    
+    await Interaction.defer();
+    try {
+      member = await Interaction.guild.members.fetch(Interaction.user.id);
+    } catch(err) {
+      console.log(err);
+    }
+
+    try {
+      const um = new UserManager();
+      const userWallet = await um.getUserWallet(member.user.id);
+      
+      const uw = new UserWallet(userWallet.adminkey);
+      const invoiceDetails = await uw.createInvote(amount.value, description.value);
+   
+      const qrData = await QRCode.toDataURL(invoiceDetails.payment_request);
+      const buffer = new Buffer.from(qrData.split(`,`)[1], `base64`);
+      const file = new Discord.MessageAttachment(buffer, `image.png`);
+      const embed = new Discord.MessageEmbed().setImage(`attachment://image.png`).addField(`Payment Request`, `${invoiceDetails.payment_request}`, true);
+  
+      // const row = new Discord.MessageActionRow()
+      //   .addComponents([
+      //     new Discord.MessageButton({
+      //       custom_id: `pay`,
+      //       label: `Pay Now!`,
+      //       emoji: { name: `💸` },
+      //       style: `SECONDARY`
+      //     })
+      //   ]);
+      // Interaction.editReply({ embeds: [embed], files: [file], components: [row]});
+      Interaction.editReply({ embeds: [embed], files: [file]});
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 

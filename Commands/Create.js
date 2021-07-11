@@ -1,3 +1,4 @@
+const Discord = require(`discord.js`);
 const Command = require(`./Command.js`);
 const UserManager = require(`../lnbitsAPI/UserManager.js`);
 
@@ -14,14 +15,35 @@ class Create extends Command {
   }
 
   async execute(Interaction) {
-    const member = await Interaction.guild.members.fetch(Interaction.user.id);
-    const um = new UserManager();
-    const userWallet = await um.getOrCreateWallet(member.user.username, Interaction.user.id);
+    let member;
+    try {
+      member = await Interaction.guild.members.fetch(Interaction.user.id);
+    } catch (err) {
+      console.log(err);
+    }
+    
+    try {
+      const um = new UserManager();
+      const userWallet = await um.getOrCreateWallet(member.user.username, Interaction.user.id);
+      const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
 
-    Interaction.reply({
-      content: `You can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`,
-      ephemeral: true
-    });
+      const row = new Discord.MessageActionRow()
+      .addComponents([
+        new Discord.MessageButton({
+          label: `Go to my wallet`,
+          emoji: { name: `💰` },
+          style: `LINK`,
+          url: `${walletUrl}`,
+        })
+      ]);
+      Interaction.reply({
+        content: `You have a wallet!`,
+        ephemeral: true,
+        components: [row]
+      });
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 

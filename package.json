@@ -11,10 +11,12 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
+    "dedent-js": "^1.0.1",
     "discord.js": "^13.0.0-dev.676118a.1625486570",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
+    "winston": "^3.3.3",
     "wretch": "^1.7.5"
   },
   "engines": {
@@ -23,9 +25,14 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "startd": "nodemon index.js",
+    "test": "jest"
   },
   "devDependencies": {
-    "eslint": "^7.30.0"
+    "eslint": "^7.30.0",
+    "jest": "^27.0.6",
+    "nock": "^13.1.1",
+    "nodemon": "^2.0.11"
   }
 }

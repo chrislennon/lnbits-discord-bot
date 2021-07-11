@@ -26,11 +26,18 @@ class Tip extends Command {
   }
 
   async execute(Interaction) {
-    await Interaction.defer();
     const sender = Interaction;
     const receiver = Interaction.options.get(`user`);
     const amount = Interaction.options.get(`amount`);
-    const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : `null`;
+    const message = Interaction.options.get(`message`) ? Interaction.options.get(`message`) : {value: `null`};
+
+    if (amount.value <= 0) {
+      Interaction.reply({
+        content: `Negative balances are not permitted`,
+        ephemeral: true
+      });
+      return
+    }
 
     const sats = amount.value;
     const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
@@ -44,21 +51,36 @@ class Tip extends Command {
     const receiverWalletData = await _.getOrCreateWallet(receiverData.user.username, receiver.user.id);
 
     if (!senderWalletData.id) {
-      Interaction.editReply({
+      Interaction.reply({
         content:`You do not currently have a wallet you can use /create`,
+        ephemeral: true
       });
-    } else if ((senderWalletData.balance/1000) - sats < 0) {
-      Interaction.editReply({
-        content:`You do not have the balance to do this.`,
-      });
-    } else if (receiverWalletData.id) {
+      return
+    }
+    const senderWallet = new UserWallet(senderWalletData.adminkey);
+    const senderWalletDetails = await senderWallet.getWalletDetails()
+    const receiverWallet = new UserWallet(receiverWalletData.adminkey);
 
-      const senderWallet = new UserWallet(senderWalletData.adminkey);
-      const receiverWallet = new UserWallet(receiverWalletData.adminkey);
-      
-      const invoiceDetails = await receiverWallet.createInvote(amount.value, message);   
+    if ((senderWalletDetails.balance/1000) - sats < 0) {
+      Interaction.reply({
+        content:`You do not have the balance to do this.`,
+        ephemeral: true
+      });
+      return
+    }
+    
+    if (receiverWalletData.id) {
+      await Interaction.defer();
+      const invoiceDetails = await receiverWallet.createInvote(amount.value, message.value);   
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
-      console.log(`invoice details`,invoicePaymentDetails);
+
+      console.log({
+        sender: sender.user.id,
+        receiver: receiver.user.id,
+        amount: amount.value,
+        message: message.value,
+        invoiceDetails: invoicePaymentDetails
+      });
       
       await Interaction.editReply({
         content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
@@ -66,13 +88,12 @@ class Tip extends Command {
       try {
         await receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${receiverWalletData.user}`);
       } catch (err) {
-        console.log(err.status);
         console.log(`User was a bot or is blocking direct messages`);
       }
     }
     else {
       // This message should no longer fire as wallets are created as required
-      Interaction.editReply({
+      Interaction.reply({
         content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
       });
     }

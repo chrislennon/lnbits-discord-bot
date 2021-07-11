@@ -1,3 +1,4 @@
+const Discord = require(`discord.js`);
 const Command = require(`./Command.js`);
 const UserManager = require(`../lnbitsAPI/UserManager.js`);
 const UserWallet = require(`../lnbitsAPI/User.js`);
@@ -17,27 +18,48 @@ class Balance extends Command {
   async execute(Interaction) {
     await Interaction.defer({ephemeral: true});
     const um = new UserManager();
-    const userWallet = await um.getUserWallet(Interaction.user.id);
+    try {
+      const userWallet = await um.getUserWallet(Interaction.user.id);
 
-    if (userWallet.adminkey) {
-      const uw = new UserWallet(userWallet.adminkey);
-      const userWalletDetails = await uw.getWalletDetails();
-      
-      const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
+      if (userWallet.adminkey) {
+        const uw = new UserWallet(userWallet.adminkey);
+        try {
+          const userWalletDetails = await uw.getWalletDetails();
+        
+          const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
+    
+          const sats = userWalletDetails.balance/1000;
+          const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
 
-      const sats = userWalletDetails.balance/1000;
-      const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+          const row = new Discord.MessageActionRow()
+          .addComponents([
+            new Discord.MessageButton({
+              label: `Go to my wallet`,
+              emoji: { name: `💰` },
+              style: `LINK`,
+              url: `${walletUrl}`,
+            })
+          ]);
       
-      Interaction.editReply({
-        content:`Balance: ${sats} Satoshis / ฿${btc} \nAccess wallet here: ${walletUrl}`,
-        ephemeral: true,
-      });
-    }
-    else {
-      Interaction.editReply({
-        content:`You do not currently have a wallet you can use /create`,
-        ephemeral: true,
-      });
+
+          Interaction.editReply({
+            content:`Balance: ${sats} Satoshis / ฿${btc}`,
+            ephemeral: true,
+            components: [row]
+          });
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+      else {
+        Interaction.editReply({
+          content:`You do not currently have a wallet you can use /create`,
+          ephemeral: true,
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }

@@ -5,6 +5,7 @@ class InteractionHandler {
   constructor(client) {
     // Dynamically load commands
     this.commands = new Discord.Collection();
+    this.buttons = new Discord.Collection();
     this.client = client;
 
     fs.readdirSync(`./Commands`)
@@ -13,6 +14,13 @@ class InteractionHandler {
       .map(file => require(`./Commands/${file}`))
       .filter(cmd => cmd.name)
       .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
+
+      fs.readdirSync(`./Buttons`)
+      .filter(file => file.endsWith(`.js`))
+      .filter(file => file !== `Button.js`)
+      .map(file => require(`./Buttons/${file}`))
+      .filter(cmd => cmd.name)
+      .forEach(cmd => this.buttons.set(cmd.name.toLowerCase(), new cmd()), this);
   }
 
   /**
@@ -38,7 +46,6 @@ class InteractionHandler {
    * Update slash commands
    */
   async updateCommands() {
-    // TODO: Loop over guilds?
     const data = [];
 
     this.commands.forEach(async cmd => {
@@ -49,7 +56,7 @@ class InteractionHandler {
       });
     });
 
-    //console.log('Update - guilds', await this.client.guilds.cache);
+    // Loop over guilds?
     this.client.guilds.cache.forEach(async guild => {
       await guild.commands.set(data);
     }); 
@@ -60,12 +67,15 @@ class InteractionHandler {
    * @param {Interaction} Interaction The Discord interaction object
    */
   handleInteraction(Interaction) {
-    // Ignore non-command interactions
-    if (!Interaction.isCommand()) return;
-
-    const command = this.commands.get(Interaction.commandName);
-
-    command.execute(Interaction);
+    if (Interaction.isCommand()) {
+      const command = this.commands.get(Interaction.commandName);
+      command.execute(Interaction);
+    } else if (Interaction.isButton()) {
+      const button = this.buttons.get(Interaction.customId);
+      button.execute(Interaction);
+    } else {
+      return;
+    }
   }
 }
 
