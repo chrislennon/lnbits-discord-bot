@@ -23,7 +23,7 @@ class Claim extends Button {
     const payUrl = Interaction.message.content.split(`LNURL: `)[1].replace(/`/g, "");
 
     const u = new UserManager();
-    const user = await u.getUserWallet(Interaction.user.id);
+    const user = await u.getOrCreateWallet(Interaction.user.username, Interaction.user.id);
     const uw = new UserWallet(user.adminkey);
     const lnurl = new LNURL(user.adminkey);
     const lnurlParts = await lnurl.scanLNURL(payUrl);
