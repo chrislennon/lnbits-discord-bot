@@ -32,14 +32,14 @@ class Balance extends Command {
           const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
 
           const row = new Discord.MessageActionRow()
-          .addComponents([
-            new Discord.MessageButton({
-              label: `Go to my wallet`,
-              emoji: { name: `💰` },
-              style: `LINK`,
-              url: `${walletUrl}`,
-            })
-          ]);
+            .addComponents([
+              new Discord.MessageButton({
+                label: `Go to my wallet`,
+                emoji: { name: `💰` },
+                style: `LINK`,
+                url: `${walletUrl}`,
+              })
+            ]);
       
 
           Interaction.editReply({
