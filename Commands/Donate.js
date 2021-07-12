@@ -17,21 +17,20 @@ class Donate extends Command {
     this.name = `donate`;
     this.description = `Create an open invoice for anyone to claim.`;
     this.options = [{
-      name: `description`,
-      type: `STRING`,
-      description: `Description of the donation`,
-      required: true,
-    },{
       name: `amount`,
       type: `INTEGER`,
       description: `The amount of satoshis payable in the invoice`,
       required: true,
+    },{
+      name: `description`,
+      type: `STRING`,
+      description: `Description of the donation`,
+      required: false,
     }];
   }
 
   async execute(Interaction) {
-
-    const description = Interaction.options.get(`description`);
+    const description = Interaction.options.get(`description`) ? Interaction.options.get(`description`) : { value: `${Interaction.user.username}[${Interaction.guild.name}] - ${new Date()}`} ;
     const amount = Interaction.options.get(`amount`);
     let member;
 
