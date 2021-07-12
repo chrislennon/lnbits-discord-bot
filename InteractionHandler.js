@@ -15,7 +15,7 @@ class InteractionHandler {
       .filter(cmd => cmd.name)
       .forEach(cmd => this.commands.set(cmd.name.toLowerCase(), new cmd()), this);
 
-      fs.readdirSync(`./Buttons`)
+    fs.readdirSync(`./Buttons`)
       .filter(file => file.endsWith(`.js`))
       .filter(file => file !== `Button.js`)
       .map(file => require(`./Buttons/${file}`))

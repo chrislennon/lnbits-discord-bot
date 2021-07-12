@@ -36,7 +36,7 @@ class Tip extends Command {
         content: `Negative balances are not permitted`,
         ephemeral: true
       });
-      return
+      return;
     }
 
     const sats = amount.value;
@@ -55,10 +55,10 @@ class Tip extends Command {
         content:`You do not currently have a wallet you can use /create`,
         ephemeral: true
       });
-      return
+      return;
     }
     const senderWallet = new UserWallet(senderWalletData.adminkey);
-    const senderWalletDetails = await senderWallet.getWalletDetails()
+    const senderWalletDetails = await senderWallet.getWalletDetails();
     const receiverWallet = new UserWallet(receiverWalletData.adminkey);
 
     if ((senderWalletDetails.balance/1000) - sats < 0) {
@@ -66,7 +66,7 @@ class Tip extends Command {
         content:`You do not have the balance to do this.`,
         ephemeral: true
       });
-      return
+      return;
     }
     
     if (receiverWalletData.id) {

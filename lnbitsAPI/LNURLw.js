@@ -9,10 +9,10 @@ class LNURLw extends Api {
 
   scanLNURL(lnurl) {
     return this.externalApi
-    .url(`${this.urlPath}/api/v1/lnurlscan/${lnurl}`)
-    .headers(this.headers)
-    .get()
-    .json();
+      .url(`${this.urlPath}/api/v1/lnurlscan/${lnurl}`)
+      .headers(this.headers)
+      .get()
+      .json();
   }
 
   createWithdrawlLink(name, amount) {
@@ -25,21 +25,21 @@ class LNURLw extends Api {
         "max_withdrawable": amount,
         "uses": 1,
         "wait_time": 1,
-          "is_unique": true
+        "is_unique": true
       })
       .post()
       .json();
   }
 
   doCallback(lnurlData) {
-    console.log('attampting to claim LNURL payment');
+    console.log(`attampting to claim LNURL payment`);
     console.log({
       "lnurl_callback": lnurlData.callback,
       "amount": (lnurlData.maxWithdrawable)/1000,
       "memo": lnurlData.defaultDescription,
       "out": false,
-      "unit": "sat"
-    })
+      "unit": `sat`
+    });
     return this.externalApi
       .url(`${this.urlPath}/api/v1/payments`)
       .headers(this.headers)
@@ -48,7 +48,7 @@ class LNURLw extends Api {
         "amount": (lnurlData.maxWithdrawable)/1000,
         "memo": lnurlData.defaultDescription,
         "out": false,
-        "unit": "sat"
+        "unit": `sat`
       })
       .post()
       .json();

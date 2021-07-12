@@ -38,7 +38,7 @@ class PayMe extends Command {
         content: `Negative balances are not permitted`,
         ephemeral: true
       });
-      return
+      return;
     }
     
     await Interaction.defer();

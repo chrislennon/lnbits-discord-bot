@@ -3,9 +3,7 @@ const Command = require(`./Command.js`);
 const Extensions = require(`../lnbitsAPI/Extensions.js`);
 const UserManager = require(`../lnbitsAPI/UserManager.js`);
 const LNURLw = require(`../lnbitsAPI/LNURLw.js`);
-const UserWallet = require(`../lnbitsAPI/User.js`);
-const QRCode = require(`qrcode`);
-const dedent = require('dedent-js');
+const dedent = require(`dedent-js`);
 
 /*
 This command will create an invoice for a user allowing anyone to claim it.
@@ -39,7 +37,7 @@ class Donate extends Command {
         content: `Negative balances are not permitted`,
         ephemeral: true
       });
-      return
+      return;
     }
     
     await Interaction.defer();
