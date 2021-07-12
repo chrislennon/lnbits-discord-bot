@@ -39,7 +39,7 @@ class Help extends Command {
     Source code: https://github.com/chrislennon/lnbits-discord-bot
 
     This bot allows you to interact with others users using the power of Bitcoins lightning network.
-    
+
     You can learn more at https://lightning.how
     `))
     .addFields(
@@ -49,7 +49,7 @@ class Help extends Command {
       { name: 'Commands', value: cmdOutput},
     );
 
-    Interaction.reply({ embeds: [embed]});
+    Interaction.reply({ embeds: [embed], ephemeral: true});
   }
 }
 
