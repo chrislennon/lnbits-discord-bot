@@ -28,14 +28,14 @@ class Create extends Command {
       const walletUrl = `${process.env.LNBITS_HOST}/wallet?usr=${userWallet.user}`;
 
       const row = new Discord.MessageActionRow()
-      .addComponents([
-        new Discord.MessageButton({
-          label: `Go to my wallet`,
-          emoji: { name: `💰` },
-          style: `LINK`,
-          url: `${walletUrl}`,
-        })
-      ]);
+        .addComponents([
+          new Discord.MessageButton({
+            label: `Go to my wallet`,
+            emoji: { name: `💰` },
+            style: `LINK`,
+            url: `${walletUrl}`,
+          })
+        ]);
       Interaction.reply({
         content: `You have a wallet!`,
         ephemeral: true,
