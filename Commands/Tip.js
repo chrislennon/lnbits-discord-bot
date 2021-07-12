@@ -69,11 +69,11 @@ class Tip extends Command {
       return;
     }
     
-    if (receiverWalletData.id) {
+    try {
       await Interaction.defer();
       const invoiceDetails = await receiverWallet.createInvote(amount.value, message.value);   
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
-
+  
       console.log({
         sender: sender.user.id,
         receiver: receiver.user.id,
@@ -81,21 +81,12 @@ class Tip extends Command {
         message: message.value,
         invoiceDetails: invoicePaymentDetails
       });
-      
+        
       await Interaction.editReply({
         content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
       });
-      try {
-        await receiverData.user.send(`${senderData.toString()} on ${receiverData.guild.toString()} sent you ${valueString}\nYou can access the wallet at ${process.env.LNBITS_HOST}/wallet?usr=${receiverWalletData.user}`);
-      } catch (err) {
-        console.log(`User was a bot or is blocking direct messages`);
-      }
-    }
-    else {
-      // This message should no longer fire as wallets are created as required
-      Interaction.reply({
-        content:`${receiverData.toString()} has currently not set up a wallet. I have set one up please retry...`,
-      });
+    } catch(err) {
+      console.log(err);
     }
   }
 }
