@@ -27,6 +27,7 @@ class Bot {
    */
   bindEvents() {
     this.client.on(`ready`, this.onReady.bind(this));
+    this.client.on(`guildCreate`, this.onGuildJoin.bind(this));
     this.client.on(`interactionCreate`, this.onInteraction.bind(this));
     this.client.on(`messageCreate`, this.onMessage.bind(this));
     this.client.on(`messageReactionAdd`, this.onMessageReactionAdd.bind(this));
@@ -89,6 +90,11 @@ class Bot {
    */
   onMessageReactionRemove(Reaction, User) {
     this.ReactionHandler.handleReaction(Reaction, User, `REMOVE`);
+  }
+
+  onGuildJoin() {
+    console.log(`joined new guild`);
+    this.InteractionHandler.updateCommands();
   }
 
   /**
