@@ -27,7 +27,7 @@
   "scripts": {
     "start": "node index.js",
     "startd": "nodemon index.js",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "devDependencies": {
     "eslint": "^7.30.0",
