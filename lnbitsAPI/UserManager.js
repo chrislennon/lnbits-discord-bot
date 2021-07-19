@@ -50,6 +50,7 @@ class UserManager extends Api {
       .get();
   }
 
+  /* istanbul ignore next */
   getUser(userId) {
     this.externalApi
       .url(`${this.urlPath}/users/${userId}`)
@@ -64,6 +65,7 @@ class UserManager extends Api {
       .get().json();
   }
 
+  /* istanbul ignore next */
   getTransactions(walletId) {
     this.externalApi
       .url(`${this.urlPath}/wallets/${walletId}`)
@@ -84,6 +86,7 @@ class UserManager extends Api {
       .post();
   }
 
+  /* istanbul ignore next */
   createWallet(username, userId) {
     this.externalApi
       .url(`${this.urlPath}/users`)
@@ -96,6 +99,7 @@ class UserManager extends Api {
       .post();
   }
 
+  /* istanbul ignore next */
   deleteUserWallet(userId) {
     this.externalApi
       .url(`${this.urlPath}/users/${userId}`)
@@ -103,6 +107,7 @@ class UserManager extends Api {
       .delete();
   }
 
+  /* istanbul ignore next */
   deleteWallet(walletId) {
     this.externalApi
       .url(`${this.urlPath}/wallets/${walletId}`)
