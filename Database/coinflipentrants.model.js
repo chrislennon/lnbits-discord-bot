@@ -1,11 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
   const Entrants = sequelize.define(`Entrants`, {
     // Model attributes are defined here
-    eventId: {
+    userId: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    userId: {
+    coinFlipId: {
       type: Sequelize.STRING,
       allowNull: false
     }

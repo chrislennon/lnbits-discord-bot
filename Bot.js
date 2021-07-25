@@ -110,12 +110,12 @@ class Bot {
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
     console.log(`Using lnbits host: ${process.env.LNBITS_HOST}`);
 
-    db.sequelize.sync();
+    //db.sequelize.sync({ alter: true });
 
     // // drop the table if it already exists
-    // db.sequelize.sync({ force: true }).then(() => {
-    //   console.log("Drop and re-sync db.");
-    // });
+    db.sequelize.sync({ force: true }).then(() => {
+      console.log(`Drop and re-sync db.`);
+    });
   }
 }
 

@@ -23,16 +23,40 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.events = require(`./events.model.js`)(sequelize, Sequelize);
-db.entrants = require(`./entrants.model.js`)(sequelize, Sequelize);
+db.coinflips = require(`./coinflips.model.js`)(sequelize, Sequelize);
+db.coinflipentry = require(`./coinflipentrants.model.js`)(sequelize, Sequelize);
 
-sparkles.on(`createEvent`, function(e){
-  createEvent(e);
+sparkles.on(`createCoinFlip`, function(e){
+  createCoinFlip(e);
 });
 
-function createEvent(event) {
+function createCoinFlip(event) {
   console.log(`create event fired`);
-  console.log(`Interaction`, event.Interaction);
+
+  const flip = {
+    creator: event.member.id,
+    commandId: event.Interaction.id,
+    entryFee: event.amount,
+    maxPlayers: event.numOfPeople
+  };
+  console.log(`create flip`, flip);
+  db.coinflips.create(flip);
 }
+
+sparkles.on(`joinCoinFlip`, function(e){
+  joinCoinFlip(e);
+});
+
+function joinCoinFlip(event) {
+  console.log(`join event fired`);
+
+  const flip = {
+    userId: event.userId,
+    coinFlipId: event.coinFlipId
+  };
+  console.log(`create flip`, flip);
+  db.coinflipentry.create(flip);
+}
+
 
 module.exports = db;

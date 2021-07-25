@@ -19,19 +19,13 @@ class CoinFlip extends Command {
       required: true,
     },{
       name: `entryamount`,
-      type: `STRING`,
-      description: `The payment required for entry`,
-      required: true,
-    },{
-      name: `description`,
-      type: `STRING`,
-      description: `Description of the event`,
+      type: `INTEGER`,
+      description: `Number of Satoshis required for entry`,
       required: true,
     }];
   }
 
   async execute(Interaction) {
-    const description = Interaction.options.get(`description`) ? Interaction.options.get(`description`) : { value: `${Interaction.user.username}[${Interaction.guild.name}] - ${new Date()}`} ;
     const amount = Interaction.options.get(`entryamount`);
     const numOfPeople = Interaction.options.get(`numofpeople`);
 
@@ -53,31 +47,33 @@ class CoinFlip extends Command {
     }
 
     try {
-      sparkles.emit(`createEvent`, { 
+      sparkles.emit(`createCoinFlip`, { 
         Interaction,
-        name: member 
+        member,
+        numOfPeople: numOfPeople.value,
+        amount: amount.value
       });
 
       const row = new Discord.MessageActionRow()
         .addComponents([
           new Discord.MessageButton({
-            custom_id: `joinbet`,
-            label: `Join Bet!`,
+            custom_id: `joinflip`,
+            label: `Join Flip!`,
             emoji: { name: `➕` },
             style: `SECONDARY`
           }),
           new Discord.MessageButton({
-            custom_id: `cancelbet`,
-            label: `Cancel Bet (owner)`,
+            custom_id: `cancelflip`,
+            label: `Cancel Flip [creator]`,
             emoji: { name: `❌` },
             style: `SECONDARY`
           })
         ]);
 
       const msgContent = dedent(`
-        ${Interaction.user.username} started a coinflip! ${numOfPeople} can enter for ${amount.value} satoshis each!
-
-        Description: ${description.value}
+        ${Interaction.user.username} started a coinflip! ${numOfPeople.value} can enter for ${amount.value} satoshis each!
+          Current Pot:
+          Entrants:
         `);
 
       Interaction.editReply({content: msgContent, components: [row]});
