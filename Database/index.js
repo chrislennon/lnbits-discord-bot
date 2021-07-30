@@ -37,7 +37,8 @@ function createCoinFlip(event) {
     creator: event.member.id,
     commandId: event.Interaction.id,
     entryFee: event.amount,
-    maxPlayers: event.numOfPeople
+    maxPlayers: event.numOfPeople,
+    status: `open`
   };
   console.log(`create flip`, flip);
   db.coinflips.create(flip);

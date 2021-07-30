@@ -10,12 +10,19 @@ module.exports = (sequelize, Sequelize) => {
     },
     entryFee: {
       type: Sequelize.INTEGER,
+      allowNull: false,
       default: 0
     },
     maxPlayers: {
       type: Sequelize.INTEGER,
+      allowNull: false,
       default: 0
-    }
+    },
+    status: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      default: `open`
+    } 
   });
   return Flips;
 };

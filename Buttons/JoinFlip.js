@@ -45,7 +45,6 @@ class JoinFlip extends Button {
 
     let entrantsText = `Entrants: `;
     allEnteredUsers.forEach(element => {
-      console.log(`entry`, element.userId);
       entrantsText += `${element.userId},`;
     });
 
@@ -53,8 +52,6 @@ class JoinFlip extends Button {
     let content = Interaction.message.content;
     content = content.replace(/Current Pot:.*/, `Current Pot: ${currentPot}`);
     content = content.replace(/Entrants:.*/, entrantsText);
-    console.log(content);
-
     Interaction.update({content: content});
   }
 }

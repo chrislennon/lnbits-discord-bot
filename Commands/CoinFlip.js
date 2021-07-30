@@ -2,6 +2,7 @@ const Discord = require(`discord.js`);
 const Command = require(`./Command.js`);
 const sparkles = require(`sparkles`)();
 const dedent = require(`dedent-js`);
+const db = require(`../Database`);
 
 /*
 This command will create a coin flip event allowing n users to contribute to a pool with one winner.
@@ -39,14 +40,23 @@ class CoinFlip extends Command {
       return;
     }
     
-    await Interaction.defer();
+    
     try {
       member = await Interaction.guild.members.fetch(Interaction.user.id);
     } catch(err) {
       console.log(err);
     }
 
-    try {
+    /* Check if User has an active flip already */
+
+    const coinFlipDetails = await db.coinflips.findAll({ where: { creator: `${Interaction.user.id}`, status: `open` }});
+
+    if (coinFlipDetails.length > 0) {
+      await Interaction.defer({ephemeral: true});
+      console.log(`CoinFlip already active for this user`, coinFlipDetails);
+      Interaction.editReply({content: `You already have an active flip, please cancel that first.`, ephemeral: true});
+    } else {
+      await Interaction.defer();
       sparkles.emit(`createCoinFlip`, { 
         Interaction,
         member,
@@ -54,31 +64,33 @@ class CoinFlip extends Command {
         amount: amount.value
       });
 
-      const row = new Discord.MessageActionRow()
-        .addComponents([
-          new Discord.MessageButton({
-            custom_id: `joinflip`,
-            label: `Join Flip!`,
-            emoji: { name: `➕` },
-            style: `SECONDARY`
-          }),
-          new Discord.MessageButton({
-            custom_id: `cancelflip`,
-            label: `Cancel Flip [creator]`,
-            emoji: { name: `❌` },
-            style: `SECONDARY`
-          })
-        ]);
-
-      const msgContent = dedent(`
-        ${Interaction.user.username} started a coinflip! ${numOfPeople.value} can enter for ${amount.value} satoshis each!
-          Current Pot:
-          Entrants:
-        `);
-
-      Interaction.editReply({content: msgContent, components: [row]});
-    } catch(err) {
-      console.log(err);
+      try {
+        const row = new Discord.MessageActionRow()
+          .addComponents([
+            new Discord.MessageButton({
+              custom_id: `joinflip`,
+              label: `Join Flip!`,
+              emoji: { name: `➕` },
+              style: `SECONDARY`
+            }),
+            new Discord.MessageButton({
+              custom_id: `cancelflip`,
+              label: `Cancel Flip [creator]`,
+              emoji: { name: `❌` },
+              style: `SECONDARY`
+            })
+          ]);
+  
+        const msgContent = dedent(`
+          ${Interaction.user.username} started a coinflip! ${numOfPeople.value} can enter for ${amount.value} satoshis each!
+            Current Pot:
+            Entrants:
+          `);
+  
+        Interaction.editReply({content: msgContent, components: [row], ephemeral:false });
+      } catch(err) {
+        console.log(err);
+      }
     }
   }
 }
