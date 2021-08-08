@@ -40,7 +40,7 @@ class Donate extends Command {
       return;
     }
     
-    await Interaction.defer();
+    await Interaction.deferReply();
     try {
       member = await Interaction.guild.members.fetch(Interaction.user.id);
     } catch(err) {

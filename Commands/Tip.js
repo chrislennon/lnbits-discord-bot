@@ -70,7 +70,7 @@ class Tip extends Command {
     }
     
     try {
-      await Interaction.defer();
+      await Interaction.deferReply();
       const invoiceDetails = await receiverWallet.createInvote(amount.value, message.value);   
       const invoicePaymentDetails = await senderWallet.payInvoice(invoiceDetails.payment_request);
   
