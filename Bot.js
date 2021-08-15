@@ -5,6 +5,8 @@ const ReactionHandler = require(`./ReactionHandler`);
 
 const db = require(`./Database`);
 const dotenv = require(`dotenv`);
+const sparkles = require(`sparkles`)();
+
 dotenv.config();
 
 class Bot {
@@ -112,9 +114,10 @@ class Bot {
 
     //db.sequelize.sync({ alter: true });
 
-    // // drop the table if it already exists
+    //drop the table if it already exists
     db.sequelize.sync({ force: true }).then(() => {
       console.log(`Drop and re-sync db.`);
+      sparkles.emit(`setupDatabase`);
     });
   }
 }

@@ -49,14 +49,14 @@ class CoinFlip extends Command {
 
     /* Check if User has an active flip already */
 
-    const coinFlipDetails = await db.coinflips.findAll({ where: { creator: `${Interaction.user.id}`, status: `open` }});
+    const coinFlipDetails = await db.coinflip.getUserFlips(Interaction.user.id);
 
     if (coinFlipDetails.length > 0) {
-      await Interaction.defer({ephemeral: true});
+      await Interaction.deferReply({ephemeral: true});
       console.log(`CoinFlip already active for this user`, coinFlipDetails);
       Interaction.editReply({content: `You already have an active flip, please cancel that first.`, ephemeral: true});
     } else {
-      await Interaction.defer();
+      await Interaction.deferReply();
       sparkles.emit(`createCoinFlip`, { 
         Interaction,
         member,
@@ -86,7 +86,7 @@ class CoinFlip extends Command {
             Current Pot:
             Entrants:
           `);
-  
+
         Interaction.editReply({content: msgContent, components: [row], ephemeral:false });
       } catch(err) {
         console.log(err);
