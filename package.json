@@ -16,6 +16,9 @@
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
+    "sequelize": "^6.6.5",
+    "sparkles": "^1.0.1",
+    "sqlite3": "^5.0.2",
     "winston": "^3.3.3",
     "wretch": "^1.7.5"
   },
