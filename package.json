@@ -12,7 +12,7 @@
   "license": "GPL-2.0",
   "dependencies": {
     "dedent-js": "^1.0.1",
-    "discord.js": "^13.0.1",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
