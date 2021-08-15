@@ -3,7 +3,10 @@ const InteractionHandler = require(`./InteractionHandler`);
 const MessageHandler = require(`./MessageHandler`);
 const ReactionHandler = require(`./ReactionHandler`);
 
+const db = require(`./Database`);
 const dotenv = require(`dotenv`);
+const sparkles = require(`sparkles`)();
+
 dotenv.config();
 
 class Bot {
@@ -98,7 +101,7 @@ class Bot {
 
   onGuildJoin() {
     console.log(`joined new guild`);
-    this.InteractionHandler.updateCommands();
+    this.InteractionHandler.createCommands();
   }
 
   /**
@@ -108,6 +111,14 @@ class Bot {
     this.InteractionHandler.updateCommands();
     console.log(`Connected to Discord as ${this.client.user.username}#${this.client.user.discriminator} <@${this.client.user.id}>`);
     console.log(`Using lnbits host: ${process.env.LNBITS_HOST}`);
+
+    //db.sequelize.sync({ alter: true });
+
+    //drop the table if it already exists
+    db.sequelize.sync({ force: true }).then(() => {
+      console.log(`Drop and re-sync db.`);
+      sparkles.emit(`setupDatabase`);
+    });
   }
 }
 

@@ -38,8 +38,9 @@ class InteractionHandler {
       });
     });
 
-    //console.log('Create - guilds', await this.client.guilds.cache);
-    await this.client.guilds.cache.first()?.commands.set(data);
+    this.client.guilds.cache.forEach(async guild => {
+      await guild.commands.set(data);
+    }); 
   }
 
   /**
