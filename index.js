@@ -1,5 +1,8 @@
 const Bot = require(`./Bot`);
+const App = require(`./App`);
 const winston = require(`winston`);
+const dotenv = require(`dotenv`);
+dotenv.config();
 
 if (process.env.LOG_TO_FILE == `true`){
   const logDate = new Date().toISOString();
@@ -45,3 +48,8 @@ const DiscordBot = new Bot();
 // }
 
 DiscordBot.connect();
+
+const DiscordApp = App;
+DiscordApp.listen(process.env.APP_PORT, () => {
+  console.log(`Example app listening at http://localhost:${process.env.APP_PORT}`);
+});
