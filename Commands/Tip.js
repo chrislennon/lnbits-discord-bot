@@ -85,6 +85,20 @@ class Tip extends Command {
       await Interaction.editReply({
         content:`${senderData.toString()} sent ${valueString} to ${receiverData.toString()}`,
       });
+
+      const userManager = new UserManager()
+      const wallet = await userManager.getUserWallet(receiverData.user.id)
+
+      if(wallet.adminkey) {
+        const uw = new UserWallet(userWallet.adminkey);
+        const userWalletDetails = await uw.getWalletDetails();
+        
+        const sats = userWalletDetails.balance/1000;
+        const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+
+        receiverData.send(`You received ${valueString} from ${senderData.toString()}.\nYour new Balance: ${sats} Satoshis / ฿${btc}`)
+      }  
+      
     } catch(err) {
       console.log(err);
     }

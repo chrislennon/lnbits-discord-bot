@@ -24,25 +24,6 @@ class InteractionHandler {
   }
 
   /**
-   * Create slash commands
-   */
-  async createCommands() {
-    // TODO: Loop over guilds?
-    const data = [];
-
-    this.commands.forEach(async cmd => {
-      data.push({
-        name: cmd.name,
-        description: cmd.description,
-        options: cmd.options
-      });
-    });
-
-    //console.log('Create - guilds', await this.client.guilds.cache);
-    await this.client.guilds.cache.first()?.commands.set(data);
-  }
-
-  /**
    * Update slash commands
    */
   async updateCommands() {
@@ -56,10 +37,7 @@ class InteractionHandler {
       });
     });
 
-    // Loop over guilds?
-    this.client.guilds.cache.forEach(async guild => {
-      await guild.commands.set(data);
-    }); 
+    await this.client.application.commands.set(data); 
   }
 
   /**
