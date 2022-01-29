@@ -8,7 +8,8 @@ dotenv.config();
 
 class Bot {
   /**
-   * Initializes all modules, a Discord client, binds events.
+   * Initializes all modules, a 
+   * +Discord client, binds events.
    * @constructor
    */
   constructor() {
@@ -17,8 +18,7 @@ class Bot {
       intents: [
         Discord.Intents.FLAGS.GUILDS,
         Discord.Intents.FLAGS.GUILD_MESSAGES, 
-        Discord.Intents.FLAGS.GUILD_MEMBERS,
-        Discord.Intents.FLAGS.DIRECT_MESSAGES
+        Discord.Intents.FLAGS.GUILD_MEMBERS
       ]
     });
     this.InteractionHandler = new InteractionHandler(this.client);
@@ -52,6 +52,22 @@ class Bot {
   destroy() {
     console.log(`Shutting down.`);
     this.client.destroy();
+  }
+
+  /**
+     * Passes message events to the MessageHandler.
+     * @param {Message} Message The Discord message object.
+     */
+   onMessage(Message) {
+    if (
+      Message.content.toLowerCase() === `!deploy` && 
+      Message.author.id === `177898294939222016`
+    ) {
+      this.InteractionHandler.updateCommands();
+      return;
+    }
+
+    this.MessageHandler.handleMessage(Message);
   }
 
   /**
