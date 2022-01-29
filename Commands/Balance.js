@@ -13,6 +13,7 @@ class Balance extends Command {
     this.name = `balance`;
     this.description = `Returns the users wallet balance.`;
     this.options = [];
+    this.global = true
   }
 
   async execute(Interaction) {

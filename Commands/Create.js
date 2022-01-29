@@ -12,6 +12,7 @@ class Create extends Command {
     this.name = `create`;
     this.description = `Create a wallet for user.`;
     this.options = [];
+    this.global = true
   }
 
   async execute(Interaction) {

@@ -14,6 +14,7 @@ class PayMe extends Command {
     super();
     this.name = `payme`;
     this.description = `Creates an invoice for the users wallet`;
+    this.global = true
     this.options = [{
       name: `amount`,
       type: `INTEGER`,
@@ -53,7 +54,7 @@ class PayMe extends Command {
       const userWallet = await um.getUserWallet(member.user.id);
       
       const uw = new UserWallet(userWallet.adminkey);
-      const invoiceDetails = await uw.createInvote(amount.value, description.value);
+      const invoiceDetails = await uw.createInvoice(amount.value, description.value);
    
       const qrData = await QRCode.toDataURL(invoiceDetails.payment_request);
       const buffer = new Buffer.from(qrData.split(`,`)[1], `base64`);
