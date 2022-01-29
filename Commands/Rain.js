@@ -47,15 +47,6 @@ class Rain extends Command {
       });
       return;
     }
-
-    Interaction.deferReply();
-
-    let member;
-    try {
-      member = await Interaction.guild.members.fetch(Interaction.user.id);
-    } catch (err) {
-      console.log(err);
-    }
     
     try {
 
@@ -66,11 +57,20 @@ class Rain extends Command {
         senderWallet = new UserWallet(senderWallet.adminkey)
         const senderDetails = await senderWallet.getWalletDetails()
         if (senderDetails.balance/1000 < amount * users) {
-          await Interaction.editReply({
+          await Interaction.reply({
             content: 'You do not have enough balance',
             ephemeral: true
           })
           return;
+        }
+
+        Interaction.deferReply();
+
+        let member;
+        try {
+          member = await Interaction.guild.members.fetch(Interaction.user.id);
+        } catch (err) {
+          console.log(err);
         }
         
         const randomInteger = (maxNumber) => {
