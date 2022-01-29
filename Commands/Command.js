@@ -3,6 +3,7 @@ class Command {
     this.name = `name`;
     this.description = ``;
     this.options = [];
+    this.global = false;
   }
 
   execute() {

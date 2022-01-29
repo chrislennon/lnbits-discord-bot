@@ -27,17 +27,27 @@ class InteractionHandler {
    * Update slash commands
    */
   async updateCommands() {
-    const data = [];
+    const locals = [];
+    const globals = [];
 
     this.commands.forEach(async cmd => {
-      data.push({
+      const data = {
         name: cmd.name,
         description: cmd.description,
         options: cmd.options
-      });
+      };
+      if(cmd.global) {
+        globals.push(data);
+      }
+      else {
+        locals.push(data);
+      }
     });
 
-    await this.client.application.commands.set(data); 
+    await this.client.application.commands.set(globals);
+    this.client.guilds.cache.forEach( async guild => {
+      await guild.commands.set(locals)  
+    });
   }
 
   /**
