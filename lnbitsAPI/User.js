@@ -7,6 +7,13 @@ class UserWallet extends Api {
     this.urlPath = `/api/v1`;
   }
 
+  async getBalanceString() {
+    const details = await this.getWalletDetails()
+    const sats = details.balance / 1000
+    const btc = (sats/100000000).toFixed(8).replace(/\.?0+$/,``);
+    return `${sats} Satoshis / ฿${btc}`;
+  }
+
   getWalletDetails() {
     return this.externalApi
       .url(`${this.urlPath}/wallet`)
@@ -15,7 +22,7 @@ class UserWallet extends Api {
       .json();
   }
 
-  createInvote(amount, description) {
+  createInvoice(amount, description) {
     return this.externalApi
       .url(`${this.urlPath}/payments`)
       .headers(this.headers)
